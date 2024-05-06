@@ -79,35 +79,16 @@ def update_place(place_id):
     storage.save()
     return jsonify(place.to_dict()), 200
 
-
-@app_views.route("/places_search", methods=['POST'], strict_slashes=False)
-def search_for_places():
-    """Shows all places in an city  or in state"""
+@app_views.route('/places_search'):
+def show_places():
+    """Retrives all the places that fulfill the passed args"""
     if not request.json:
         abort(400)
-    if len(request.get_json()) < 1:
-        return jsonify(
-            [place_to_dict() for place in storage.all("Place").values()])
-    request_body = request.get_json()
-    amenities = request_body.get("amenities", [])
-    places = []
-    for key, values in request_body.items():
-        if key == "states":
-            for state_id in values:
-                cities_id = [city.id for city in storage.all("City").values()
-                             if state_id == city.state_id]
-            places.extend([place.to_dict()
-                           for place in storage.all("Place").values()
-                           if place.city_id in cities_id])
-        if key == "cities":
-            places.extend([place.to_dict()
-                           for place in storage.all("Place").values()
-                           if place.city_id in values])
-    if amenities:
-        filtered_places = []
-        for place in places:
-            if all(amenity_id in place.amenities
-                   for amenity_id in amenities):
-                filtered_places.append(place)
-        places = filtered_places
-    return jsonify(places)
+    resquest_body = request.get_json()
+    if (len(resquest_body) > 1):
+        return jsonify[place.to_dict() for place in storage.all("Place")]
+    if "states" in resquest_body:
+       for key, value in resquest_body.items():
+           if key == "states":
+               print(value)
+           
